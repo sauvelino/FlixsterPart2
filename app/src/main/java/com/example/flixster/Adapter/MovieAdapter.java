@@ -19,9 +19,9 @@ import com.example.flixster.R;
 
 import java.util.List;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
-Context context;
-List<Movie> movies;
+public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    Context context;
+    List<Movie> movies;
 
     public MovieAdapter(Context context, List<Movie> movies) {
         this.context = context;
@@ -30,15 +30,34 @@ List<Movie> movies;
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(context).inflate(R.layout.custom,parent,false);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        RecyclerView.ViewHolder viewHolder = null;
+        switch (viewType){
+            case 1:
+                View v1 = inflater.inflate(R.layout.populate,parent,false);
+                viewHolder = new ViewHolderPopulate(v1);
+                break;
+            case 0:
+                View v2 = inflater.inflate(R.layout.custom,parent,false);
+                viewHolder = new ViewHolderBasic(v2);
+                break;
+        }
+        return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Movie movie= movies.get(position);
-        holder.bind(movie);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        switch (holder.getItemViewType()){
+            case 1:
+                ViewHolderPopulate holderPopulate = (ViewHolderPopulate) holder;
+                holderPopulate.bind(position);
+                break;
+            case 0:
+                ViewHolderBasic holderBasic = (ViewHolderBasic) holder;
+                holderBasic.bind(position);
+                break;
+        }
     }
 
     @Override
@@ -46,40 +65,69 @@ List<Movie> movies;
         return movies.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
-TextView tv_title,tv_overview;
-ImageView poster,populate;
-RelativeLayout container;
-        public ViewHolder(@NonNull View itemView) {
+    @Override
+    public int getItemViewType(int position) {
+        if (movies.get(position).getVote_average()> 5.0)
+            return 1;
+        else
+            return 0;
+    }
+
+
+    /*
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view= LayoutInflater.from(context).inflate(R.layout.custom,parent,false);
+        return new ViewHolder(view);
+    }
+
+
+
+    public void onBindViewHolder(@NonNull ViewHolderBasic holder, int position) {
+        Movie movie= movies.get(position);
+        holder.bind(movie);
+    }*/
+
+    class ViewHolderBasic extends RecyclerView.ViewHolder{
+        TextView tv_title,tv_overview;
+        ImageView poster;
+        public ViewHolderBasic(@NonNull View itemView) {
             super(itemView);
             tv_title= itemView.findViewById(R.id.tv_title);
             tv_overview= itemView.findViewById(R.id.tv_overview);
             poster= itemView.findViewById(R.id.img_poster);
-            populate=itemView.findViewById(R.id.populate);
-
         }
 
-
-
-        public void bind(Movie movie) {
-            tv_title.setText(movie.getTitle());
-            tv_overview.setText(movie.getOverView());
-            String imgurl=movie.getPosterPath();
-            Double vote=movie.getVote_average();
-            if (vote>5.0)
-            {
-                if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    imgurl = movie.getBackPosterPath();
-                }
-                //Glide.with(context).load(imgurl).into(populate);
-                Glide.with(context).load(imgurl).into(populate);
-            }
+        public void bind(int position) {
+            tv_title.setText(movies.get(position).getTitle());
+            tv_overview.setText(movies.get(position).getOverView());
+            String imgurl= movies.get(position).getPosterPath();
 
                 if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    imgurl = movie.getBackPosterPath();
+                    imgurl = movies.get(position).getBackPosterPath();
                 }
                 Glide.with(context).load(imgurl).into(poster);
+        }
+    }
 
+
+
+    class ViewHolderPopulate extends RecyclerView.ViewHolder{
+        ImageView poster;
+        public ViewHolderPopulate(@NonNull View itemView) {
+            super(itemView);
+            poster= itemView.findViewById(R.id.populate);
+        }
+
+        public void bind(int position) {
+            String imgurl= movies.get(position).getPosterPath();
+
+
+            if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                imgurl = movies.get(position).getBackPosterPath();
+            }
+            Glide.with(context).load(imgurl).into(poster);
         }
     }
 }
