@@ -6,7 +6,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:ignore="MissingDefaultResource">
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/populate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/back"
+            tools:srcCompat="@tools:sample/avatars" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/img_poster"
@@ -15,7 +33,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
         app:srcCompat="@drawable/ic_movie_creation_black_24dp" />
 
     <TextView
@@ -28,12 +46,12 @@
         android:textColor="#008fff"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/img_poster"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     <TextView
         android:id="@+id/tv_overview"
-        android:layout_width="442dp"
-        android:layout_height="174dp"
+        android:layout_width="363dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:ems="10"
         android:text="Peter Parker and his friends go on a summer trip to Europe. However, they will hardly be able to rest Peter will have to agree to help Nick Fury uncover the mystery of creatures that cause natural disasters and destruction throughout the continent."

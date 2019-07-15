@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.flixster.Model.Movie;
 import com.example.flixster.R;
 
@@ -47,13 +48,14 @@ List<Movie> movies;
 
     class ViewHolder extends RecyclerView.ViewHolder{
 TextView tv_title,tv_overview;
-ImageView poster;
+ImageView poster,populate;
 RelativeLayout container;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_title= itemView.findViewById(R.id.tv_title);
             tv_overview= itemView.findViewById(R.id.tv_overview);
             poster= itemView.findViewById(R.id.img_poster);
+            populate=itemView.findViewById(R.id.populate);
 
         }
 
@@ -63,10 +65,20 @@ RelativeLayout container;
             tv_title.setText(movie.getTitle());
             tv_overview.setText(movie.getOverView());
             String imgurl=movie.getPosterPath();
-            if(context.getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE){
-                imgurl=movie.getBackPosterPath();
+            Double vote=movie.getVote_average();
+            if (vote>5.0)
+            {
+                if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    imgurl = movie.getBackPosterPath();
+                }
+                //Glide.with(context).load(imgurl).into(populate);
+                Glide.with(context).load(imgurl).into(populate);
             }
-            Glide.with(context).load(imgurl).into(poster);
+
+                if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    imgurl = movie.getBackPosterPath();
+                }
+                Glide.with(context).load(imgurl).into(poster);
 
         }
     }
